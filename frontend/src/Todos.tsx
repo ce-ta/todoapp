@@ -1,26 +1,35 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Todo from './Todo'
 
 export type Todo = {
     id: string;
     title: string;
-    content: string;
 }
 
 export default function Todos() {
-    const [todos, setTodos] = useState<Todo[]>([{id: 1, title: "Test Title", content: "Test Content"}]);
+    const [todos, setTodos] = useState<Todo[]>([{id: "1", title: "Test Title"}]);
+    let inputTask = useRef<HTMLInputElement>(null);
 
-    const setTask = (newTask: Todo) => {
-        setTodos((prevTodos: Todo[]) => [...prevTodos, newTask])
+    const setTask = () => {
+        if(inputTask.current && inputTask.current.value) {
+            const newTodo: Todo = {
+                id: "2",
+                title: inputTask.current.value
+            }
+            setTodos((prevTodos: Todo[]) => [...prevTodos, newTodo])
+            inputTask.current.value = "";
+        }
     };
 
   return (
     <div>
-        {todos.map((todo: Todo) => (
         <ul>
+        {todos.map((todo: Todo) => (
             <Todo todo={todo} />
-        </ul>
         ))}
+         </ul>
+        <input type="text" ref={inputTask}></input>
+        <button type="submit" onClick={setTask}>追加</button>
     </div>
   )
 }
