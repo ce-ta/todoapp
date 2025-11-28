@@ -2,21 +2,23 @@ import { useState, useRef } from 'react'
 import Todo from './Todo'
 
 export type Todo = {
-    id: string;
+    id: number;
     title: string;
 }
 
 export default function Todos() {
-    const [todos, setTodos] = useState<Todo[]>([{id: "1", title: "Test Title"}]);
+    const [todos, setTodos] = useState<Todo[]>([]);
+    const [taskId, setTaskId] = useState<number>(0)
     let inputTask = useRef<HTMLInputElement>(null);
 
     const setTask = () => {
         if(inputTask.current && inputTask.current.value) {
             const newTodo: Todo = {
-                id: "2",
+                id: taskId,
                 title: inputTask.current.value
             }
             setTodos((prevTodos: Todo[]) => [...prevTodos, newTodo])
+            setTaskId((prev) => prev + 1);
             inputTask.current.value = "";
         }
     };
@@ -25,7 +27,9 @@ export default function Todos() {
     <div>
         <ul>
         {todos.map((todo: Todo) => (
-            <Todo todo={todo} />
+            <li key={todo.id}>
+                <Todo todo={todo} setTodos={setTodos} />
+            </li>
         ))}
          </ul>
         <input type="text" ref={inputTask}></input>
